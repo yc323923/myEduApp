@@ -1,10 +1,23 @@
 <template>
   <div id="app">
-    <h1>heelll</h1>
     <router-view/>
   </div>
 </template>
 
-<style lang="scss" scoped>
+<script lang="ts">
+import Vue from 'vue'
 
+export default Vue.extend({
+  data () {
+    return {
+      name: 1
+    }
+  }
+})
+</script>
+
+<style lang="scss" scoped>
+.text{
+  color: $danger-color;
+}
 </style>
