@@ -14,6 +14,7 @@ module.exports = {
   },
 
   devServer: {
+    //此代理仅针对本地服务（npm run serve）
     proxy: {
       '/boss': {
         target: 'http://eduboss.lagou.com',

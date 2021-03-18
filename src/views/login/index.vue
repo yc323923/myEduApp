@@ -8,11 +8,11 @@
       <el-form-item prop="phone" label="手机号">
       <el-input v-model="form.phone"></el-input>
       </el-form-item>
-      <el-form-item prop="pwd" label="密码">
-      <el-input type="password" v-model="form.pwd"></el-input>
+      <el-form-item prop="password" label="密码">
+      <el-input type="password" v-model="form.password"></el-input>
       </el-form-item>
     <el-form-item>
-    <el-button class="login-btn" type="primary" @click="onSubmit('form')">登录</el-button>
+    <el-button :disabled='disabledBtn' class="login-btn" type="primary" @click="onSubmit()">登录</el-button>
     <!-- <el-button>取消</el-button> -->
     </el-form-item>
     </el-form>
@@ -22,6 +22,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { login } from '@/services/user'
+import { Form } from 'element-ui'
 const validatorPhone = (rule: any, value: any, callback: Function) => {
   if (value === '') {
     callback(new Error('手机号不能为空'))
@@ -36,32 +38,46 @@ const validatorPwd = (rule: any, value: string, callback: Function) => {
     callback(new Error('密码至少3位'))
   }
 }
+interface LoginRes {
+  state: number;
+  content: string;
+  message: string;
+  success: boolean;
+}
 export default Vue.extend({
   name: 'LoginIndex',
   data () {
     return {
+      disabledBtn: false,
       formRule: {
-        pwd: [
-          { required: true, validator: validatorPwd, trigger: 'blur' }
+        password: [
+          { required: true, trigger: 'blur' }
         ],
         phone: [
-          { required: true, trigger: 'blur', validator: validatorPhone }
+          { required: true, trigger: 'blur' }
         ]
       },
       form: {
-        phone: '',
-        pwd: ''
+        phone: '18201288771',
+        password: '111111'
       }
     }
   },
   methods: {
-    onSubmit (form: string) {
-      (this.$refs[form] as any).validate((isValid: boolean, obj: Object) => {
-        if (isValid) {
-          console.log('submit!')
+    async onSubmit () {
+      const isValid = await (this.$refs.form as Form).validate()
+      if (!isValid) return
+      this.disabledBtn = true
+      login(this.form).then((ret) => {
+        const data: LoginRes = ret.data
+        if (data.state === 1) {
+          this.$store.commit('setUser', data.content)
+          this.$message.success(data.message)
+          this.disabledBtn = false
+          this.$router.push(this.$route.query.redirect as string || '/')
         } else {
-          alert('手机号或密码不对')
-          return false
+          this.$message.error(data.message)
+          this.disabledBtn = false
         }
       })
     }

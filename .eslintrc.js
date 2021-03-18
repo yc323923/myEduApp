@@ -16,6 +16,12 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/ban-types': 'off',
-    '@typescript-eslint/no-empty-function':'off'
+    '@typescript-eslint/no-empty-function':'off',
+    'indent': 'off',
+    'no-trailing-spaces': 'off',
+    'quotes': 'off',
+    'semi': 'off',
+    'space-before-function-paren': 'off',
+    'comma-dangle': 'off'
   }
 }
